@@ -1,5 +1,5 @@
 
-name: DevBoard CI
+name: DevBoard CI/CD
 
 on:
   push:
@@ -30,3 +30,23 @@ jobs:
 
       - name: Production build
         run: npm run build
+
+  deploy:
+    name: Deploy to Railway
+    needs: build
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v5
+
+      - name: Deploy to Railway
+        env:
+          RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
+          RAILWAY_PROJECT_ID: ${{ secrets.RAILWAY_PROJECT_ID }}
+          RAILWAY_SERVICE_ID: ${{ secrets.RAILWAY_SERVICE_ID }}
+        run: |
+          npx @railway/cli up --ci \
+            --project "$RAILWAY_PROJECT_ID" \
+            --service "$RAILWAY_SERVICE_ID"
