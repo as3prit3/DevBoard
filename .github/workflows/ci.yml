@@ -47,7 +47,7 @@ jobs:
           RAILWAY_PROJECT_ID: ${{ secrets.RAILWAY_PROJECT_ID }}
           RAILWAY_SERVICE_ID: ${{ secrets.RAILWAY_SERVICE_ID }}
         run: |
-          npx @railway/cli up --ci \
+          npx @railway/cli up --ci --verbose \
             --project "$RAILWAY_PROJECT_ID" \
             --environment production \
             --service "$RAILWAY_SERVICE_ID"
